@@ -1,0 +1,15 @@
+<div class="items">
+  <h2>Items</h2>
+  <form  #itemsForm="ngForm" (ngSubmit)="addItem($event)">
+    <input type="text" [(ngModel)]="itemName" name="name" #name="ngModel" />
+    <button class="add_item" type="submit">Add new</button>
+  </form>
+  <a class="item_list" *ngFor="let item of items" (click)="selectItem(item)" >
+    <div [class.active]="item.id === currentItem.id"></div>
+    <h5>{{item.name}}</h5>
+    <span class="badge">{{item.comments.length}}</span>
+    <button (click)="removeItem(item)">Delete</button>
+  </a>
+</div>
+
+<app-comments [currentItem] = "currentItem" [currentItemIndex] = "currentItemIndex"></app-comments>

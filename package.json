@@ -1,22 +1,20 @@
 {
   "name": "angular2-demo",
   "discription": "A simple demo for angular 2",
-  "version": "4.1.0",
+  "version": "1.0.0",
   "scripts": {
     "start": "webpack-dev-server --inline --colors --progress --port 3000"
   },
   "dependencies": {
-    "@angular/common": "4.1.1",
-    "@angular/compiler": "4.1.1",
-    "@angular/core": "4.1.1",
-    "@angular/forms": "4.1.1",
-    "@angular/http": "4.1.1",
-    "@angular/platform-browser": "4.1.1",
-    "@angular/platform-browser-dynamic": "4.1.1",
-    "@angular/router": "4.1.1",
-    "angular2-local-storage": "^0.2.0",
+    "@angular/common": "2.1.1",
+    "@angular/compiler": "2.1.1",
+    "@angular/core": "2.1.1",
+    "@angular/forms": "2.1.1",
+    "@angular/http": "2.1.1",
+    "@angular/platform-browser": "2.1.1",
+    "@angular/platform-browser-dynamic": "2.1.1",
+    "@angular/router": "3.1.1",
     "core-js": "2.4.1",
-    "ng2-webstorage": "^1.8.0",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.0.0-beta.12",
     "zone.js": "0.6.26"

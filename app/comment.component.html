@@ -1,17 +1,13 @@
-<div class="comments">
-  <h2>Comments #{{currentItemIndex + 1}}</h2>
-
-  <div class="comment_list" *ngFor="let comment of currentItem.comments; let index=index; let odd=odd; let even=even;">
-    <div class="comment_item" [ngClass]="{'last-item': $last}">
-      <div class="comment_img" [ngClass]="{ odd: odd, even: even }"></div>
-        <div class="comment_text">{{comment.content}}</div>
-    </div>
+<div class="comment_list" *ngFor="let comment of comments; let index=index; let odd=odd; let even=even;">
+  <div class="comment_item" [ngClass]="{'last-item': $last}">
+    <div class="comment_img" [ngClass]="{ odd: odd, even: even }"></div>
+      <div class="comment_text">{{comment.content}}</div>
   </div>
+</div>
 
-  <div class="add_comment">
-    <div class="comment_img add"></div>
-    <form #commentsForm="ngForm" (ngSubmit)="addComment($event)"  (keyup.enter)="addComment($event)">
-      <textarea rows="4" cols="40" [(ngModel)]="newComment" [ngModelOptions]="{standalone: true}"></textarea>
-    </form>
-  </div>
+<div class="add_comment">
+  <div class="comment_img add"></div>
+  <form #commentsForm="ngForm"  (keyup.enter)="addComment($event)">
+    <textarea rows="4" cols="40" [(ngModel)]="newComment" [ngModelOptions]="{standalone: true}"></textarea>
+  </form>
 </div>

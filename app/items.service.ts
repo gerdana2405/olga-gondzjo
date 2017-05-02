@@ -1,18 +1,36 @@
 import { Injectable } from '@angular/core';
 
 import { Item } from './item';
-import { ITEMS, generateItemId, generateCommentId } from './items.storage';
+import { LocalStorageService } from './localStorage.service';
+
+let generateId = function (prefix: string) {
+  return prefix + Math.floor(Math.random() * 100000);
+};
+
+let generateItemId = function () {
+  return generateId('item_');
+};
+
+let generateCommentId = function () {
+  return generateId('comment_');
+};
+
+let items: Item[];
 
 @Injectable()
 export class ItemsService {
+
+  constructor(private localStorage: LocalStorageService ) { };
+
   getItems(): Item[] {
-    return ITEMS;
+    items = this.localStorage.getData('angularApp') || [];
+    return items;
   };
 
-  searchItemByName(name: string) {
-    return ITEMS.find(function(element: Item) {
+  searchItemByName(name: string): Item{
+    return items.find(function(element): boolean {
       if (element.name == name) {
-        return element;
+        return true;
       }
     })
   };
@@ -22,14 +40,14 @@ export class ItemsService {
       return
     };
 
-    ITEMS.push({
+    items.push({
       name: name,
       id: generateItemId(),
       comments: []
     })
   };
 
-  addNewComment(item: Item, comment: string) {
+  addNewComment(item: Item, comment: string): void{
     if (!item || !comment) {
       return;
     }

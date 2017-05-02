@@ -11,7 +11,7 @@ import { ItemsService } from './items.service';
 })
 export class CommentComponent {
   @Input() currentItem: Item;
-  @Input() currentItemIndex: number;
+  @Input() comments: Array<Object>;
 
   newComment: string;
 

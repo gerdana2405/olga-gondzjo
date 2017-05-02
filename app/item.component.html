@@ -12,4 +12,7 @@
   </a>
 </div>
 
-<app-comments [currentItem] = "currentItem" [currentItemIndex] = "currentItemIndex"></app-comments>
+<div class="comments">
+  <h2>Comments #{{currentItemIndex}}</h2>
+  <app-comments [currentItem] = "currentItem" [comments] = "comments"></app-comments>
+</div>

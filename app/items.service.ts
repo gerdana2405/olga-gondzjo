@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs/Subject';
 
 import { Item } from './item';
 import { LocalStorageService } from './localStorage.service';
@@ -19,13 +20,20 @@ let generateCommentId = function () {
 export class ItemsService {
   items: Item[];
 
-  constructor(private localStorage: LocalStorageService ) { };
+    constructor(private localStorage: LocalStorageService ) { 
+    this.items = this.localStorage.getData('angularApp') || [];
+  };
+
+    private ItemsSubject = new Subject<any>();
+    ItemObservable = this.ItemsSubject.asObservable();
 
   getItems(): Item[] {
-    this.items = this.localStorage.getData('angularApp') || [];
-        console.log(this.items);
     return this.items;
   };
+
+  displayItem(item: Item): void {
+    this.ItemsSubject.next(item);
+  }
 
   searchItemByName(name: string): Item{
     return this.items.find(function(element): boolean {
@@ -36,17 +44,17 @@ export class ItemsService {
   };
 
   addItem(name: string): void {   
-      if (!name) {
-        return
-      };
+    if (!name) {
+      return
+    };
 
-      this.items.push({
-        name: name,
-        id: generateItemId(),
-        comments: []
-      });
+    this.items.push({
+      name: name,
+      id: generateItemId(),
+      comments: []
+    });
 
-      this.localStorage.saveData('angularApp', this.items);
+    this.localStorage.saveData('angularApp', this.items);
   };
 
   removeItem(item: Item): void {

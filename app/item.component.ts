@@ -1,48 +1,50 @@
-import { Component, Input, OnInit, DoCheck } from '@angular/core';
+import { Component, Input, OnDestroy } from "@angular/core";
+import { Subscription }   from 'rxjs/Subscription';
 
-
-import { AppComponent } from './app.component'
 import { Item } from './item';
 import { ItemsService } from './items.service';
-import { LocalStorageService } from './localStorage.service';
 
 @Component({
-  selector: 'app-items',
-  templateUrl: './app/item.component.html',
-  providers: [ ItemsService, LocalStorageService ]
+  selector: "item",
+  templateUrl: "./app/item.component.html"
 })
 export class ItemComponent {
-  currentItem: Item;
-  currentItemIndex: number;
-  comments: Array<Object>;
-  items: Item[];
+    @Input() item: Item;
+    name: string;
+    selected = false;
+    id: string;
+    currentItem: Item;
+    currentItemIndex: number;
+    comments: Array<Object>;
+    subscription: Subscription;
+    items: Item[];
 
-  constructor(private itemService: ItemsService, private localStorage: LocalStorageService ) { };
+    constructor(private itemService: ItemsService) {
+        this.subscription = itemService.ItemObservable.subscribe(() => {
+            this.name = this.item.name;
+            this.comments = this.item.comments;
+            this.items = itemService.getItems();
+        });
+     };
 
-  getItems(): void {
-    this.items = this.itemService.getItems();
+    removeItem(item: Item): void {
+        if (this.currentItem.id == item.id) {
+            this.currentItem = undefined || this.items[0];
+            this.currentItemIndex = this.items.indexOf(this.currentItem) + 1;
+        }
 
-    if(!this.currentItem) {
-      this.currentItem = this.items[0] || undefined;
-    }
-  };
+        if (!item) {
+            return;
+        }
 
+        this.items = this. items.filter(function (itemToFilterOut: Item) {
+            return itemToFilterOut.id != item.id;
+        });
 
-  ngOnInit(): void {
-    this.getItems();
-  };
-
-  selectItem(item: Item, currentItem: Item): void {
-    this.currentItem = item;
-    this.currentItemIndex = this.items.indexOf(this.currentItem) + 1;
-  };
-
-  removeItem(item: Item): void {
-    if (this.currentItem.id == item.id) {
-      this.currentItem = undefined || this.items[0];
-      this.currentItemIndex = this.items.indexOf(this.currentItem) + 1;
-    }
-
-    this.itemService.removeItem(item);
+        this.localStorage.saveData('angularApp', this.items);
+  };  
+    
+    ngOnDestroy() { // prevent memory leak when component destroyed
+        this.subscription.unsubscribe();
   };
 }

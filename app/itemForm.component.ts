@@ -28,5 +28,4 @@ export class ItemFormComponent {
 
     this.itemName = '';
   };
-
 }

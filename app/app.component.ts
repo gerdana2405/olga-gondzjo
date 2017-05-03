@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 import { Item } from "./item";
-import { ItemComponent } from "./item.component";
+import { ItemsListComponent } from "./itemsList.component";
 
 @Component({
   selector: "my-app",

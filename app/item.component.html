@@ -1,15 +1,6 @@
-<div class="items">
-  <h2>Items</h2>
-  <item-form></item-form>
-  <a class="item_list" *ngFor="let item of items" (click)="selectItem(item)" >
-    <div [class.active]="item.id === getCurrentItem().id"></div>
-    <h5>{{item.name}}</h5>
-    <span class="badge">{{item.comments.length}}</span>
+<a class="item_list">
+    <div [class.active]="selected"></div>
+    <h5>{{name}}</h5>
+    <span class="badge">{{comments.length}}</span>
     <button (click)="removeItem(item)">Delete</button>
   </a>
-</div>
-
-<div class="comments">
-  <h2>Comments #{{currentItemIndex}}</h2>
-  <app-comments [currentItem] = "currentItem"></app-comments>
-</div>

@@ -1,0 +1,10 @@
+<div class="items">
+  <h2>Items</h2>
+  <item-form></item-form>
+  <item *ngFor="let item of items" (click)="selectItem(item)" [item] = 'item'></item>
+</div>
+
+<div class="comments">
+  <h2>Comments #{{currentItemIndex}}</h2>
+  <app-comments [currentItem] = "currentItem"></app-comments>
+</div>

@@ -12,13 +12,4 @@ import { ItemsService } from './items.service';
 export class CommentComponent {
   @Input() currentItem: Item;
   @Input() comments: Array<Object>;
-
-  newComment: string;
-
-  constructor(private itemService: ItemsService) { };
-
-  addComment(): void {
-    this.itemService.addNewComment(this.currentItem, this.newComment);
-    this.newComment = '';
-  };
 }

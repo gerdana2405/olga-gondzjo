@@ -4,10 +4,4 @@
       <div class="comment_text">{{comment.content}}</div>
   </div>
 </div>
-
-<div class="add_comment">
-  <div class="comment_img add"></div>
-  <form #commentsForm="ngForm"  (keyup.enter)="addComment($event)">
-    <textarea rows="4" cols="40" [(ngModel)]="newComment" [ngModelOptions]="{standalone: true}"></textarea>
-  </form>
-</div>
+<comment-form></comment-form>

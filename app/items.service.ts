@@ -15,36 +15,50 @@ let generateCommentId = function () {
   return generateId('comment_');
 };
 
-let items: Item[];
-
 @Injectable()
 export class ItemsService {
+  items: Item[];
 
   constructor(private localStorage: LocalStorageService ) { };
 
   getItems(): Item[] {
-    items = this.localStorage.getData('angularApp') || [];
-    return items;
+    this.items = this.localStorage.getData('angularApp') || [];
+        console.log(this.items);
+    return this.items;
   };
 
   searchItemByName(name: string): Item{
-    return items.find(function(element): boolean {
+    return this.items.find(function(element): boolean {
       if (element.name == name) {
         return true;
       }
     })
   };
 
-  addItem(name: string): void {
-    if (!name) {
-      return
-    };
+  addItem(name: string): void {   
+      if (!name) {
+        return
+      };
 
-    items.push({
-      name: name,
-      id: generateItemId(),
-      comments: []
-    })
+      this.items.push({
+        name: name,
+        id: generateItemId(),
+        comments: []
+      });
+
+      this.localStorage.saveData('angularApp', this.items);
+  };
+
+  removeItem(item: Item): void {
+    if (!item) {
+      return;
+    }
+
+    this.items = this. items.filter(function (itemToFilterOut: Item) {
+      return itemToFilterOut.id != item.id;
+    });
+
+    this.localStorage.saveData('angularApp', this.items);
   };
 
   addNewComment(item: Item, comment: string): void{
@@ -56,5 +70,7 @@ export class ItemsService {
       id: generateCommentId(),
       content: comment
     });
+
+    this.localStorage.saveData('angularApp', this.items);
   };
 }

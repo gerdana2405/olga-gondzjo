@@ -1,0 +1,4 @@
+<form  #itemsForm="ngForm" (ngSubmit)="addItem($event)">
+  <input type="text" [(ngModel)]="itemName" name="name" #name="ngModel" />
+  <button class="add_item" type="submit">Add new</button>
+</form>

@@ -29,10 +29,6 @@ export class ItemsService {
     this.items = this.localStorage.getData('angularApp') || [];
   };
 
-  refresh(items: Item[]): void {
-    this.itemSubject.next(items);
-  };
-
   getItems(): Item[] {
     return this.items;
   };
@@ -57,6 +53,7 @@ export class ItemsService {
     });
 
     this.localStorage.saveData('angularApp', this.items);
+    this.itemSubject.next(this.items);
   };
 
   removeItem(item: Item): void {
@@ -69,6 +66,7 @@ export class ItemsService {
     });
 
     this.localStorage.saveData('angularApp', this.items);
+    this.itemSubject.next(this.items);
   };
 
   addNewComment(item: Item, comment: string): void{

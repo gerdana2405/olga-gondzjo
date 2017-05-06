@@ -15,7 +15,11 @@ export class ItemFormComponent {
   currentItem: Item;
   items: Item[];
 
-  constructor(private itemService: ItemsService) {   };
+  constructor(private itemService: ItemsService) { 
+    this.itemService.itemObservable.subscribe(item => {
+      console.log('add' + item);
+    });
+  };
 
   addItem(): void {
     let searchItemByName = this.itemService.searchItemByName(this.itemName);

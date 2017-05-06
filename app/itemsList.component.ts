@@ -19,6 +19,7 @@ export class ItemsListComponent {
 
   constructor(private itemService: ItemsService, private localStorage: LocalStorageService ) { 
     this.itemService.itemObservable.subscribe(item => {
+      this.items = item;
       console.log(item);
     });
   };

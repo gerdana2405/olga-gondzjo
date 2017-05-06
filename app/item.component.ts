@@ -18,7 +18,11 @@ export class ItemComponent {
     subscription: Subscription;
     items: Item[];
 
-    constructor(private itemService: ItemsService) { };
+    constructor(private itemService: ItemsService) { 
+      this.itemService.itemObservable.subscribe(item => {
+        console.log('remove' + item);
+      });
+    };
 
     removeItem(item: Item): void {
        this.itemService.removeItem(item);

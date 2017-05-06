@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { AppComponent } from './app.component'
 import { Item } from './item';
@@ -12,12 +12,13 @@ import { LocalStorageService } from './localStorage.service';
 })
 export class CommentFormComponent {
   newComment: string;
-  currentItem: Item;
+ @Input() currentItem: Item;
 
-  constructor(private itemService: ItemsService) { };
+  constructor(private itemService: ItemsService) {  };
 
   addComment(): void {
     this.itemService.addNewComment(this.currentItem, this.newComment);
     this.newComment = '';
+    
   };
 }

@@ -18,19 +18,21 @@ export class ItemsListComponent {
   items: Item[];
 
   constructor(private itemService: ItemsService, private localStorage: LocalStorageService ) { 
-    itemService.ItemObservable.subscribe(item => {
+    this.itemService.itemObservable.subscribe(item => {
       console.log(item);
-    })
+    });
   };
 
   getItems(): void {
     this.items = this.itemService.getItems();
 
-    if(!this.currentItem) {
-      this.currentItem = this.items[0] || undefined;
-    }
+    console.log(this.items);
 
-    this.selectItem(this.currentItem);
+ //   if(!this.currentItem) {
+ //     this.currentItem = this.items[0] || undefined;
+ //   }
+//
+//    this.selectItem(this.currentItem);
   };
 
   selectItem(item: Item): void {
@@ -41,4 +43,8 @@ export class ItemsListComponent {
   ngOnInit(): void {
     this.getItems();
   };
+
+ // ngDoCheck(): void {
+  //   this.items = this.itemService.getItems();
+ // }
 }

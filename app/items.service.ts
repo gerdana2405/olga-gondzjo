@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject }    from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
+
 
 import { Item } from './item';
 import { LocalStorageService } from './localStorage.service';
@@ -20,22 +21,23 @@ let generateCommentId = function () {
 export class ItemsService {
   items: Item[];
 
-    constructor(private localStorage: LocalStorageService ) { 
+ private itemSubject = new Subject<any>();
+ itemObservable = this.itemSubject.asObservable();
+ 
+
+  constructor(private localStorage: LocalStorageService ) { 
     this.items = this.localStorage.getData('angularApp') || [];
   };
 
-    private ItemsSubject = new Subject<any>();
-    ItemObservable = this.ItemsSubject.asObservable();
+  refresh(items: Item[]): void {
+    this.itemSubject.next(items);
+  };
 
   getItems(): Item[] {
     return this.items;
   };
-
-  displayItem(item: Item): void {
-    this.ItemsSubject.next(item);
-  }
-
-  searchItemByName(name: string): Item{
+ 
+  searchItemByName(name: string): Item {
     return this.items.find(function(element): boolean {
       if (element.name == name) {
         return true;

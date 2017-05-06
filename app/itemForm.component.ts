@@ -15,17 +15,17 @@ export class ItemFormComponent {
   currentItem: Item;
   items: Item[];
 
-  constructor(private itemService: ItemsService) { };
+  constructor(private itemService: ItemsService) {   };
 
   addItem(): void {
-    const searchItemByName = this.itemService.searchItemByName(this.itemName);
+    let searchItemByName = this.itemService.searchItemByName(this.itemName);
 
     if (searchItemByName) {
       this.currentItem = searchItemByName;
     } else {
       this.itemService.addItem(this.itemName);
     }
-
+   
     this.itemName = '';
   };
 }

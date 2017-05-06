@@ -1,6 +1,6 @@
 <a class="item_list">
     <div [class.active]="selected"></div>
-    <h5>{{name}}</h5>
-    <span class="badge">{{comments.length}}</span>
+    <h5>{{item.name}}</h5>
+    <span class="badge">{{item.comments.length}}</span>
     <button (click)="removeItem(item)">Delete</button>
   </a>

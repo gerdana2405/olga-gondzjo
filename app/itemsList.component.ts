@@ -28,11 +28,11 @@ export class ItemsListComponent {
 
     console.log(this.items);
 
- //   if(!this.currentItem) {
- //     this.currentItem = this.items[0] || undefined;
- //   }
-//
-//    this.selectItem(this.currentItem);
+    if(!this.currentItem) {
+      this.currentItem = this.items[0] || undefined;
+    }
+
+    this.selectItem(this.currentItem);
   };
 
   selectItem(item: Item): void {

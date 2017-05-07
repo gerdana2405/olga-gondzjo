@@ -7,18 +7,14 @@ import { LocalStorageService } from './localStorage.service';
 
 @Component({
   selector: 'item-form',
-  templateUrl: './app/itemForm.component.html',
-  providers: [ ItemsService ]
+  templateUrl: './app/itemForm.component.html'
 })
 export class ItemFormComponent {
   itemName: string;
   currentItem: Item;
-  items: Item[];
-
+  
   constructor(private itemService: ItemsService) { 
-    this.itemService.itemObservable.subscribe(item => {
-      console.log('add' + item);
-    });
+    this.itemService.itemObservable.subscribe();
   };
 
   addItem(): void {
@@ -29,7 +25,7 @@ export class ItemFormComponent {
     } else {
       this.itemService.addItem(this.itemName);
     }
-   
+    
     this.itemName = '';
   };
 }

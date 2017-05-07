@@ -23,6 +23,9 @@ export class ItemsService {
 
  private itemSubject = new Subject<any>();
  itemObservable = this.itemSubject.asObservable();
+
+ public commentSubject = new Subject<any>();
+ commentObservable = this.commentSubject.asObservable();
  
 
   constructor(private localStorage: LocalStorageService ) { 
@@ -61,7 +64,7 @@ export class ItemsService {
       return;
     }
 
-    this.items = this. items.filter(function (itemToFilterOut: Item) {
+    this.items = this.items.filter(function (itemToFilterOut: Item) {
       return itemToFilterOut.id != item.id;
     });
 
@@ -69,16 +72,42 @@ export class ItemsService {
     this.itemSubject.next(this.items);
   };
 
+  selectItem(item: Item, currentItem: Item): number {
+    let currentItemIndex: number;
+
+    if(this.items.length === 0) {
+      currentItemIndex = undefined;
+      this.commentSubject.next(item.comments);
+    }
+
+     currentItemIndex = this.items.indexOf(currentItem) + 1;
+     this.commentSubject.next(item.comments);
+     return currentItemIndex;
+  };
+
+  getComment(item: Item):  Array<Object> {
+    if(!item) {
+      return [];
+    }
+    return item.comments;
+  };
+
   addNewComment(item: Item, comment: string): void{
     if (!item || !comment) {
       return;
     }
 
-    item.comments.push({
-      id: generateCommentId(),
-      content: comment
+   this.items.find(function(element): boolean {
+      if (element.name == item.name) {
+        element.comments.push({
+          id: generateCommentId(),
+          content: comment
+        });
+        return true;
+      }
     });
 
     this.localStorage.saveData('angularApp', this.items);
+    this.commentSubject.next(item.comments);
   };
 }

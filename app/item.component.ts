@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Subscription }   from 'rxjs/Subscription';
 
 import { Item } from './item';
@@ -9,22 +9,15 @@ import { ItemsService } from './items.service';
   templateUrl: "./app/item.component.html"
 })
 export class ItemComponent {
-    @Input() item: Item;
-    name: string;
-    id: string;
-    currentItem: Item;
-    currentItemIndex: number;
-    comments: Array<Object>;
-    subscription: Subscription;
-    items: Item[];
+   @Input() item: Item;
+   @Input() currentItem: Item;
+   @Input() items: Item[];
 
-    constructor(private itemService: ItemsService) { 
-      this.itemService.itemObservable.subscribe(item => {
-        console.log('remove' + item);
-      });
-    };
+   constructor(private itemService: ItemsService) { 
+     this.itemService.itemObservable.subscribe();
+   };
 
-    removeItem(item: Item): void {
-       this.itemService.removeItem(item);
-    };  
+   removeItem(item: Item): void {
+      this.itemService.removeItem(item);
+   };  
 }

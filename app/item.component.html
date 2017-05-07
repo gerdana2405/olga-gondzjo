@@ -1,5 +1,5 @@
 <a class="item_list">
-    <div [class.active]="selected"></div>
+    <div [class.active]="item.id === currentItem.id"></div>
     <h5>{{item.name}}</h5>
     <span class="badge">{{item.comments.length}}</span>
     <button (click)="removeItem(item)">Delete</button>

@@ -7,18 +7,19 @@ import { LocalStorageService } from './localStorage.service';
 
 @Component({
   selector: 'comment-form',
-  templateUrl: './app/commentForm.component.html',
-  providers: [ ItemsService ]
+  templateUrl: './app/commentForm.component.html'
+  
 })
 export class CommentFormComponent {
   newComment: string;
- @Input() currentItem: Item;
+  @Input() currentItem: Item;
 
-  constructor(private itemService: ItemsService) {  };
+  constructor(private itemService: ItemsService) { 
+    this.itemService.commentObservable.subscribe();
+  };
 
   addComment(): void {
     this.itemService.addNewComment(this.currentItem, this.newComment);
     this.newComment = '';
-    
   };
 }

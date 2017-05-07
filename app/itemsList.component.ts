@@ -17,11 +17,8 @@ export class ItemsListComponent {
   comments: Array<Object>;
   items: Item[];
 
-  constructor(private itemService: ItemsService, private localStorage: LocalStorageService ) { 
-    this.itemService.itemObservable.subscribe(item => {
-      this.items = item;
-      console.log(item);
-    });
+  constructor(private itemService: ItemsService) { 
+    this.itemService.itemObservable.subscribe(item => this.items = item);
   };
 
   getItems(): void {
@@ -32,20 +29,20 @@ export class ItemsListComponent {
     if(!this.currentItem) {
       this.currentItem = this.items[0] || undefined;
     }
-
+  
     this.selectItem(this.currentItem);
   };
 
   selectItem(item: Item): void {
-      this.currentItem = item;
-      this.currentItemIndex = this.items.indexOf(this.currentItem) + 1;
+      this.currentItem = item || this.items[0];
+      this.currentItemIndex = undefined || 1;
+
+      if(this.currentItem) {
+        this.currentItemIndex =  this.itemService.selectItem(item, this.currentItem)
+      }
   };
 
   ngOnInit(): void {
     this.getItems();
   };
-
- // ngDoCheck(): void {
-  //   this.items = this.itemService.getItems();
- // }
 }

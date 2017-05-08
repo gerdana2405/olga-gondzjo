@@ -26,6 +26,9 @@ export class ItemsService {
 
  public commentSubject = new Subject<any>();
  commentObservable = this.commentSubject.asObservable();
+
+ public currentItemSubject = new Subject<any>();
+ currentItemObservable = this.currentItemSubject.asObservable();
  
 
   constructor(private localStorage: LocalStorageService ) { 
@@ -81,15 +84,15 @@ export class ItemsService {
     }
 
      currentItemIndex = this.items.indexOf(currentItem) + 1;
-     this.commentSubject.next(item.comments);
+     this.currentItemSubject.next(currentItem);
      return currentItemIndex;
   };
 
-  getComment(item: Item):  Array<Object> {
-    if(!item) {
-      return [];
-    }
-    return item.comments;
+  getComment(item: Item): Array<Object> {
+      if (!item) {
+          return [];
+      }
+      return item.comments;
   };
 
   addNewComment(item: Item, comment: string): void{

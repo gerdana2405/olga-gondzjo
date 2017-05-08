@@ -14,10 +14,14 @@ export class ItemComponent {
    @Input() items: Item[];
 
    constructor(private itemService: ItemsService) { 
-     this.itemService.itemObservable.subscribe();
+       this.itemService.itemObservable.subscribe();
+       this.itemService.currentItemObservable.subscribe();
    };
 
    removeItem(item: Item): void {
-      this.itemService.removeItem(item);
+       this.itemService.removeItem(item);
+       this.currentItem = this.items[0] || undefined;
+       this.itemService.selectItem(this.currentItem, this.currentItem);
+       this.itemService.currentItemSubject.next(this.currentItem);
    };  
 }

@@ -7,40 +7,43 @@ import { ItemsService } from './items.service';
 import { LocalStorageService } from './localStorage.service';
 
 @Component({
-  selector: 'app-items',
-  templateUrl: './app/itemsList.component.html',
-  providers: [ ItemsService, LocalStorageService ]
+    selector: 'app-items',
+    templateUrl: './app/itemsList.component.html',
+    providers: [ItemsService, LocalStorageService]
 })
 export class ItemsListComponent {
-  currentItem: Item;
-  currentItemIndex: number;
-  comments: Array<Object>;
-  items: Item[];
+    currentItem: Item;
+    currentItemIndex: number;
+    comments: Array<Object>;
+    items: Item[];
 
-  constructor(private itemService: ItemsService) { 
-    this.itemService.itemObservable.subscribe(item => this.items = item);
-  };
+    constructor(private itemService: ItemsService) {
+        this.itemService.itemObservable.subscribe(item => this.items = item);
+        this.itemService.currentItemObservable.subscribe(current => {
+            this.currentItem = current;
+            this.currentItemIndex = this.itemService.selectItem(this.currentItem, this.currentItem)
+        });
+    };
 
-  getItems(): void {
-    this.items = this.itemService.getItems();
+    getItems(): void {
+        this.items = this.itemService.getItems();
 
-    console.log(this.items);
+        console.log(this.items);
 
-    if(!this.currentItem) {
-      this.currentItem = this.items[0] || undefined;
-    }
-  
-    this.selectItem(this.currentItem);
-  };
+        if (!this.currentItem) {
+            this.currentItem = this.items[0] || undefined;
+        }
+    };
 
-  selectItem(item: Item): void {
-      this.currentItem = item || this.items[0];
-      this.currentItemIndex = undefined || 1;
+    selectItem(item: Item): void {
+        this.currentItem = item || this.items[0];
 
-      if(this.currentItem) {
-        this.currentItemIndex =  this.itemService.selectItem(item, this.currentItem)
-      }
-  };
+        if (this.currentItem) {
+            this.currentItemIndex = this.itemService.selectItem(item, this.currentItem)
+        }
+
+        this.itemService.currentItemSubject.next(this.currentItem);
+    };
 
   ngOnInit(): void {
     this.getItems();

@@ -5,27 +5,19 @@ import { Item } from './item';
 import { ItemsService } from './items.service';
 
 @Component({
-  selector: 'app-comments',
-  templateUrl: './app/comment.component.html'
+    selector: 'app-comments',
+    templateUrl: './app/comment.component.html'
 })
 export class CommentComponent {
-  @Input() currentItem: Item;
-  @Input() comments: Array<Object>;
+    @Input() currentItem: Item;
+    @Input() comments: Array<Object>;
 
-  constructor(private itemService: ItemsService) { 
-    this.itemService.commentObservable.subscribe(comments => {
-      this.comments = comments;
-    });
+    constructor(private itemService: ItemsService) {
+        this.itemService.commentObservable.subscribe(comments => {
+            this.comments = comments;
+        });
+
+        this.itemService.currentItemObservable.subscribe(current => this.comments = this.itemService.getComment(current) || []);
   };
 
-  getComment(): void {
-  if(!this.currentItem){
-    this.comments = [];
-  }
-    this.comments = this.itemService.getComment(this.currentItem);
-  };
-
-  ngOnInit(): void {
-    this.getComment();
-  };
 }

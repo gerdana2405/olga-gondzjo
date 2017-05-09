@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, EventEmitter, Output } from "@angular/core";
 import { Subscription }   from 'rxjs/Subscription';
 
 import { Item } from './item';
@@ -9,19 +9,11 @@ import { ItemsService } from './items.service';
   templateUrl: "./app/item.component.html"
 })
 export class ItemComponent {
-   @Input() item: Item;
-   @Input() currentItem: Item;
-   @Input() items: Item[];
+  @Input() item: Item;
+  @Input() isActive: boolean;
+  @Output() onRemove = new EventEmitter();
 
-   constructor(private itemService: ItemsService) { 
-       this.itemService.itemObservable.subscribe();
-       this.itemService.currentItemObservable.subscribe();
-   };
-
-   removeItem(item: Item): void {
-       this.itemService.removeItem(item);
-       this.currentItem = this.items[0] || undefined;
-       this.itemService.selectItem(this.currentItem, this.currentItem);
-       this.itemService.currentItemSubject.next(this.currentItem);
-   };  
+  removeItem() {
+    this.onRemove.emit(this.item);
+  };  
 }

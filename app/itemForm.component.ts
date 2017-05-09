@@ -14,7 +14,7 @@ export class ItemFormComponent {
   currentItem: Item;
   
   constructor(private itemService: ItemsService) { 
-      this.itemService.itemObservable.subscribe();
+
   };
 
   addItem(): void {
@@ -22,10 +22,12 @@ export class ItemFormComponent {
 
     if (searchItemByName) {
         this.currentItem = searchItemByName;
-        this.itemService.currentItemSubject.next(this.currentItem);
+        // todo
+        // this.itemService.currentItemSubject.next(this.currentItem);
     } else {
         this.itemService.addItem(this.itemName);
-        this.itemService.currentItemSubject.next(this.itemService.searchItemByName(this.itemName));
+        // todo
+        // this.itemService.currentItemSubject.next(this.itemService.searchItemByName(this.itemName));
     }
     
     this.itemName = '';

@@ -12,40 +12,38 @@ import { LocalStorageService } from './localStorage.service';
     providers: [ItemsService, LocalStorageService]
 })
 export class ItemsListComponent {
-    currentItem: Item;
-    currentItemIndex: number;
-    comments: Array<Object>;
-    items: Item[];
+  currentItem: Item;
+  currentItemIndex: number;
+  comments: Array<Object>;
+  items: Item[];
 
-    constructor(private itemService: ItemsService) {
-        this.itemService.itemObservable.subscribe(item => this.items = item);
-        this.itemService.currentItemObservable.subscribe(current => {
-            this.currentItem = current;
-            this.currentItemIndex = this.itemService.selectItem(this.currentItem, this.currentItem)
-        });
-    };
+  constructor(private itemService: ItemsService) {
+    this.items = [];
 
-    getItems(): void {
-        this.items = this.itemService.getItems();
+    this.itemService.itemsObservable.subscribe(items => this.items = items);
+    this.itemService.currentItemObservable.subscribe(({ item, index }) => {
+      this.currentItem = item;
+      this.currentItemIndex = index;
+    });
+  };
 
-        console.log(this.items);
+  isItemActive(item: Item): boolean {
+    if (!item || !this.currentItem) {
+      return false;
+    }
 
-        if (!this.currentItem) {
-            this.currentItem = this.items[0] || undefined;
-        }
-    };
+    if (this.currentItem.id === item.id) {
+      return true;
+    }
 
-    selectItem(item: Item): void {
-        this.currentItem = item || this.items[0];
+    return false;
+  }
 
-        if (this.currentItem) {
-            this.currentItemIndex = this.itemService.selectItem(item, this.currentItem)
-        }
+  onRemove(item: Item) {
+    this.itemService.removeItem(item);
+  }
 
-        this.itemService.currentItemSubject.next(this.currentItem);
-    };
-
-  ngOnInit(): void {
-    this.getItems();
+  selectItem(item: Item): void {
+    this.itemService.selectItem(item);
   };
 }

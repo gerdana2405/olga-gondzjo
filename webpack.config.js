@@ -16,5 +16,8 @@ module.exports = {
         loader: 'ts-loader'
       }
     ]
-  }
+  },
+
+  // user source-map for production
+  devtool: 'inline-source-map'
 };

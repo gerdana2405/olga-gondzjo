@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 
 import { Item } from './item';
 import { LocalStorageService } from './localStorage.service';
@@ -17,22 +16,48 @@ let generateCommentId = function () {
   return generateId('comment_');
 };
 
+interface CurrentItemEvent {
+  item: Item // currentItem
+  index: number // currentItem index in items
+}
+
 @Injectable()
 export class ItemsService {
   items: Item[];
+  currentItem: Item;
 
- private itemSubject = new Subject<any>();
- itemObservable = this.itemSubject.asObservable();
+  private itemsSubject: BehaviorSubject<Item[]>;
+  itemsObservable: Observable<Item[]>;
 
- public commentSubject = new Subject<any>();
- commentObservable = this.commentSubject.asObservable();
+  private commentsSubject: BehaviorSubject<any[]>;
+  commentsObservable: Observable<any[]>;
 
- public currentItemSubject = new Subject<any>();
- currentItemObservable = this.currentItemSubject.asObservable();
- 
+  private currentItemSubject: BehaviorSubject<CurrentItemEvent>;
+  currentItemObservable: Observable<CurrentItemEvent>;
 
   constructor(private localStorage: LocalStorageService ) { 
     this.items = this.localStorage.getData('angularApp') || [];
+
+    this.itemsSubject = new BehaviorSubject<Item[]>(this.items);
+    this.itemsObservable = this.itemsSubject.asObservable();
+
+    this.commentsSubject = new BehaviorSubject<any[]>([]);
+    this.commentsObservable = this.commentsSubject.asObservable();
+
+    this.currentItemSubject = new BehaviorSubject<CurrentItemEvent>({item: undefined, index: undefined});
+    this.currentItemObservable = this.currentItemSubject.asObservable();
+
+    this.currentItemObservable.subscribe((currentItemEvent) => {
+      this.currentItem = currentItemEvent.item;
+
+      if (currentItemEvent.item) {
+        this.commentsSubject.next(currentItemEvent.item.comments);
+      } else {
+        this.commentsSubject.next([]);
+      }
+    });
+
+    this.selectItem(this.items[0]);
   };
 
   getItems(): Item[] {
@@ -58,8 +83,12 @@ export class ItemsService {
       comments: []
     });
 
-    this.localStorage.saveData('angularApp', this.items);
-    this.itemSubject.next(this.items);
+    this.saveToLocalStore();
+    this.itemsSubject.next(this.items);
+
+    if (!this.currentItem) {
+      this.selectItem(this.items[0]);
+    }
   };
 
   removeItem(item: Item): void {
@@ -71,46 +100,48 @@ export class ItemsService {
       return itemToFilterOut.id != item.id;
     });
 
-    this.localStorage.saveData('angularApp', this.items);
-    this.itemSubject.next(this.items);
+    this.saveToLocalStore();
+    this.itemsSubject.next(this.items);
+
+    if (this.currentItem && this.currentItem.id === item.id) {
+      this.selectItem(this.items[0]);
+    }
   };
 
-  selectItem(item: Item, currentItem: Item): number {
-    let currentItemIndex: number;
-
-    if(this.items.length === 0) {
-      currentItemIndex = undefined;
-      this.commentSubject.next(item.comments);
+  selectItem(currentItem: Item): number {
+    if (!currentItem || this.items.length === 0) {
+      this.currentItemSubject.next({
+        item: undefined,
+        index: undefined
+      });
+      return;
     }
 
-     currentItemIndex = this.items.indexOf(currentItem) + 1;
-     this.currentItemSubject.next(currentItem);
-     return currentItemIndex;
+    this.currentItemSubject.next({
+      item: currentItem,
+      index: this.items.indexOf(currentItem) + 1
+    });
   };
 
-  getComment(item: Item): Array<Object> {
-      if (!item) {
-          return [];
-      }
-      return item.comments;
-  };
+  addCommentToCurrentItem(comment: string) {
+    this.addNewComment(this.currentItem, comment);
+  }
 
-  addNewComment(item: Item, comment: string): void{
+  addNewComment(item: Item, comment: string): void {
     if (!item || !comment) {
       return;
     }
 
-   this.items.find(function(element): boolean {
-      if (element.name == item.name) {
-        element.comments.push({
-          id: generateCommentId(),
-          content: comment
-        });
-        return true;
-      }
+    item.comments.push({
+      id: generateCommentId(),
+      content: comment
     });
-
-    this.localStorage.saveData('angularApp', this.items);
-    this.commentSubject.next(item.comments);
+    
+    this.saveToLocalStore();
+    this.commentsSubject.next(item.comments);
   };
+
+  private saveToLocalStore() {
+    this.localStorage.saveData('angularApp', this.items);
+  }
 }
